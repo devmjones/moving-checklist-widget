@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving Checklist Widget</title>
+    <style>
+        .moving-checklist-widget {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2C5F5F, #1A4A4A);
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(44, 95, 95, 0.3);
+            color: #F5F1E8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .moving-checklist-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #7FB069, #A8D5BA, #7FB069);
+        }
+
+        .widget-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+            background: linear-gradient(135deg, #A8D5BA, #7FB069);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(127, 176, 105, 0.3);
+        }
+
+        .widget-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            color: #F5F1E8;
+        }
+
+        .widget-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: #E8E4D9;
+        }
+
+        .widget-button {
+            background: linear-gradient(135deg, #A8D5BA, #7FB069);
+            color: #2C5F5F;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(127, 176, 105, 0.4);
+        }
+
+        .widget-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(127, 176, 105, 0.5);
+            background: linear-gradient(135deg, #7FB069, #6FA055);
+        }
+
+        .widget-button:active {
+            transform: translateY(0);
+        }
+
+        .widget-features {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 15px;
+            line-height: 1.3;
+            color: #E8E4D9;
+        }
+
+        .widget-loading {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .widget-spinner {
+            border: 2px solid rgba(245, 241, 232, 0.3);
+            border-top: 2px solid #A8D5BA;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 5px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Brain icon styling */
+        .brain-icon {
+            background: linear-gradient(135deg, #A8D5BA, #7FB069);
+            color: #2C5F5F;
+            font-size: 32px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(127, 176, 105, 0.3);
+            position: relative;
+        }
+
+        .brain-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #7FB069;
+            border-radius: 50%;
+            box-shadow: 
+                -15px -8px 0 -2px #7FB069,
+                15px -8px 0 -2px #7FB069,
+                -8px 12px 0 -2px #7FB069,
+                8px 12px 0 -2px #7FB069,
+                0 -15px 0 -2px #7FB069,
+                0 15px 0 -2px #7FB069,
+                -12px 0 0 -2px #7FB069,
+                12px 0 0 -2px #7FB069;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .moving-checklist-widget {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .widget-title {
+                font-size: 20px;
+            }
+            
+            .widget-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .brain-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+        }
+
+        /* Accessibility improvements */
+        .widget-button:focus {
+            outline: 2px solid #A8D5BA;
+            outline-offset: 2px;
+        }
+
+        /* Animation for loading state */
+        .widget-button.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="moving-checklist-widget">
+        <div class="brain-icon">🧠</div>
+        <h3 class="widget-title">Master Moving Checklist</h3>
+        <p class="widget-subtitle">Get your own editable copy with working dropdowns!</p>
+        
+        <button class="widget-button" onclick="createSheetCopy()">
+            Get My Copy FREE
+        </button>
+        
+        <div class="widget-loading" id="widgetLoading">
+            <div class="widget-spinner"></div>
+            <p style="font-size: 12px; margin-top: 5px;">Creating your copy...</p>
+        </div>
+        
+        <p class="widget-features">
+            ✓ Fully editable ✓ Working dropdowns ✓ Professional format
+        </p>
+    </div>
+
+    <script>
+        function createSheetCopy() {
+            // Show loading
+            const button = document.querySelector('.widget-button');
+            const loading = document.getElementById('widgetLoading');
+            
+            button.classList.add('loading');
+            loading.style.display = 'block';
+            
+            // Sheet ID and copy URL
+            const sheetId = '13bZjCDjyTHloqu801g63b4a-nwjPz4Bp';
+            const copyUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/copy`;
+            
+            // Open copy URL
+            setTimeout(() => {
+                window.open(copyUrl, '_blank');
+                
+                // Reset UI after delay
+                setTimeout(() => {
+                    button.classList.remove('loading');
+                    loading.style.display = 'none';
+                }, 2000);
+            }, 1000);
+        }
+
+        // Add analytics tracking if needed
+        function trackWidgetInteraction() {
+            // Add your analytics code here
+            console.log('Widget interaction tracked');
+        }
+
+        // Track button clicks
+        document.querySelector('.widget-button').addEventListener('click', trackWidgetInteraction);
+    </script>
+</body>
+</html>
+
